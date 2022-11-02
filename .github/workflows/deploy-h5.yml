@@ -1,0 +1,27 @@
+name: 构建/部署H5应用
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+
+    # react项目为npm run-script build，vue项目改为npm run build
+    - name: Install and Build
+      run: |
+        npm install -g pnpm
+        pnpm install
+        pnpm build:h5
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
